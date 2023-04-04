@@ -1,0 +1,110 @@
+basePath: /api/v1
+definitions:
+  models.MultiChoiceAnswerDTO:
+    properties:
+      content:
+        type: string
+      is_correct:
+        type: boolean
+    type: object
+  models.MultiChoiceQuestionDTO:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/models.MultiChoiceAnswerDTO'
+        type: array
+      credit:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      tags:
+        items:
+          $ref: '#/definitions/models.TagDTO'
+        type: array
+      title:
+        type: string
+    type: object
+  models.TagDTO:
+    properties:
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: charlie_j107+aat-backend-swagger@outlook.com
+    name: Charlie
+  description: This is the backend RESTful API for the Auto Assessment Tool.
+  license:
+    name: MPL-2.0
+    url: https://www.mozilla.org/en-US/MPL/2.0/
+  title: Auto Assessment Tool backend RESTful API
+  version: "1.0"
+paths:
+  /multi-choice:
+    get:
+      description: Get all multi choice questions
+      parameters:
+      - description: Tags to filter questions
+        in: query
+        name: tags
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+            type: array
+      summary: Get all multi choice questions
+      tags:
+      - MultiChoiceQuestions
+    post:
+      consumes:
+      - application/json
+      description: Create a multi choice question
+      parameters:
+      - description: Question to create
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+      summary: Create a multi choice question
+      tags:
+      - MultiChoiceQuestions
+  /multi-choice/{id}:
+    get:
+      description: Get a multi choice question
+      parameters:
+      - description: ID of the question
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+      summary: Get a multi choice question
+      tags:
+      - MultiChoiceQuestions
+swagger: "2.0"
