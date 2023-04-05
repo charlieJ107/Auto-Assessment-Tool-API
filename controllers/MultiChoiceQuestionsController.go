@@ -184,3 +184,20 @@ func CreateMultiChoiceQuestion(c *gin.Context) {
 	}
 	c.IndentedJSON(http.StatusCreated, responseDTO)
 }
+
+// DeleteMultiChoiceQuestion
+// @Summary Delete a multi choice question
+// @Description Delete a multi choice question
+// @Tags MultiChoiceQuestions
+// @Produce json
+// @Param id path string true "ID of the question"
+// @Success 200 {object} string "Question deleted"
+// @Router /multi-choice/{id} [delete]
+func DeleteMultiChoiceQuestion(c *gin.Context) {
+	var question models.MultiChoiceQuestion
+	models.DB.First(&question, c.Param("id"))
+	models.DB.Delete(&question)
+	// Also delete all answers
+	models.DB.Where("question_id = ?", question.ID).Delete(&models.MultiChoiceAnswer{})
+	c.IndentedJSON(http.StatusNoContent, gin.H{"message": "Question deleted"})
+}

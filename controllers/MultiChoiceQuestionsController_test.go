@@ -3,6 +3,7 @@ package controllers
 import (
 	"AAT_Api/models"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +15,7 @@ func TestMultiChoiceQuestionController(t *testing.T) {
 	t.Run("CreateMultiChoiceQuestion", TestCreateMultiChoiceQuestion)
 	t.Run("GetMultiChoiceQuestions", TestGetMultiChoiceQuestions)
 	t.Run("GetMultiChoiceQuestion", TestGetMultiChoiceQuestion)
+	t.Run("DeleteMultiChoiceQuestion", TestDeleteMultiChoiceQuestion)
 }
 
 func TestCreateMultiChoiceQuestion(t *testing.T) {
@@ -264,15 +266,64 @@ func TestGetMultiChoiceQuestion(t *testing.T) {
 	}
 }
 
+func TestDeleteMultiChoiceQuestion(t *testing.T) {
+	type args struct {
+		req            *http.Request
+		expectedStatus int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Delete a multi choice question",
+			args: args{
+				req:            httptest.NewRequest("DELETE", "/multi-choice/1", nil),
+				expectedStatus: http.StatusNoContent,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Run test here
+			// Create a new HTTP response recorder
+			rr := httptest.NewRecorder()
+
+			// Create a new router instance
+			r := gin.Default()
+
+			// Define the route
+			r.DELETE("/multi-choice/:id", DeleteMultiChoiceQuestion)
+
+			// Connect database
+			models.ConnectDatabase()
+
+			// Dispatch the HTTP request
+			r.ServeHTTP(rr, tt.args.req)
+
+			// Check the status code: No content (204) so no body to check
+			if status := rr.Code; status != tt.args.expectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tt.args.expectedStatus)
+			}
+
+		})
+	}
+}
+
 func compareJSON(a, b string) bool {
 	var o1 interface{}
 	var o2 interface{}
 	err := json.Unmarshal([]byte(a), &o1)
 	if err != nil {
+		fmt.Println("Error when unmarshal object a to comparing json: ", err)
+		fmt.Println("Object a: ", a)
 		panic(err)
 	}
 	err = json.Unmarshal([]byte(b), &o2)
 	if err != nil {
+		fmt.Println("Error when unmarshal object b to comparing json: ", err)
+		fmt.Println("Object b: ", b)
 		panic(err)
 	}
 	aBytes, _ := json.Marshal(a)

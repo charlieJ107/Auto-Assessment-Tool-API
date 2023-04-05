@@ -5,8 +5,10 @@ name: Auto Assessment Tool
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "develop" ]
     tags: [ "v*" ]
+  pull_request:
+    branches: [ "master", "develop" ]
 
 jobs:
   build_and_test_on_linux:
@@ -34,13 +36,13 @@ jobs:
           go-version: 1.19
 
       - name: Build
-        run: go build -o AAT_Api-linux-x64 -v AAT_Api
+        run: go build -o AAT_Api-linux-x64-${{github.sha}} -v AAT_Api
 
       - name: Upload Built Binary
         uses: actions/upload-artifact@v3
         with:
-          name: AAT_Api-linux-x64
-          path: AAT_Api-linux-x64
+          name: AAT_Api-linux-x64-${{ github.sha }}
+          path: AAT_Api-linux-x64-${{ github.sha }}
 
       - name: Test
         env:
@@ -50,6 +52,25 @@ jobs:
           DB_NAME: aat
           DB_PORT: 5432
         run: go test -v ./...
+
+  build_on_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Build
+        run: go build -o AAT_Api-windows-x64-${{github.sha}}.exe -v AAT_Api
+
+      - name: Upload Built Binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: AAT_Api-windows-x64-${{ github.sha }}
+          path: AAT_Api-windows-x64-${{ github.sha }}.exe
 
   release_docker:
     runs-on: ubuntu-latest
@@ -83,23 +104,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-  release_on_windows:
-    runs-on: windows-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
-
-      - name: Build
-        run: go build -o AAT_Api-windows-x64 -v AAT_Api
-
-      - name: Upload Built Binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: AAT_Api-windows-x64
-          path: AAT_Api-windows-x64
