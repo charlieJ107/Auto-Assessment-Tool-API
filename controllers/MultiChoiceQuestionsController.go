@@ -36,7 +36,25 @@ func GetMultiChoiceQuestions(c *gin.Context) {
 		dto.Title = question.Title
 		dto.Description = question.Description
 		dto.Credit = question.Credit
-
+		// Get answers
+		var answers []models.MultiChoiceAnswer
+		models.DB.Where("question_id = ?", question.ID).Find(&answers)
+		for _, answer := range answers {
+			var answerDto models.MultiChoiceAnswerDTO
+			answerDto.Content = answer.Content
+			answerDto.IsCorrect = answer.IsCorrect
+			dto.Answers = append(dto.Answers, answerDto)
+		}
+		// Get tags
+		var tags []models.Tag
+		err := models.DB.Model(&question).Association("Tags").Find(&tags)
+		if err != nil {
+			c.IndentedJSON(http.StatusNotFound, gin.H{"error": "Error when fetch tags"})
+			return
+		}
+		for _, tag := range tags {
+			dto.Tags = append(dto.Tags, tag.Name)
+		}
 		dtos = append(dtos, dto)
 	}
 	// Return DTOs as json
