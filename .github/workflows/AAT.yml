@@ -35,6 +35,12 @@ jobs:
       - name: Build
         run: go build -o AAT_Api-linux-x64 -v AAT_Api
 
+      - name: Upload Built Binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: AAT_Api-linux-x64
+          path: AAT_Api-linux-x64
+
       - name: Test
         env:
           DB_HOST: localhost
@@ -44,26 +50,37 @@ jobs:
           DB_PORT: 5432
         run: go test -v ./...
 
-  release_on_linux:
+  create_release:
     runs-on: ubuntu-latest
     needs: build_and_test_on_linux
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
-
-      - name: Build Binary
-        run: go build -o AAT_Api-linux-x64 -v AAT_Api
-
       - name: Create Release
         run: |
           gh release create ${{ github.ref_name }} -t "Release ${{ github.ref_name }}" -n "Release ${{ github.ref_name }}"
-          gh release upload ${{ github.ref_name }} AAT_Api-linux-x64
+    
 
+  release_on_linux:
+    runs-on: ubuntu-latest
+    needs: create_release
+    concurrency: release
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Download Built Binary
+        uses: actions/download-artifact@v3
+        with:
+          name: AAT_Api-linux-x64
+          path: .
+
+      - name: Upload Release
+        run: gh release upload ${{ github.ref_name }} AAT_Api-linux-x64
+
+  release_docker:
+    runs-on: ubuntu-latest
+    needs: create_release
+    if: startsWith(github.ref, 'refs/tags/v')
+    concurrency: release
+    steps:
       - name: Build image
         run: docker build . --file Dockerfile --tag $IMAGE_ID:${{github.ref_name}} --label "run_id=${{github.run_id}}"
 
@@ -76,12 +93,13 @@ jobs:
           echo IMAGE_ID=IMAGE_ID
           docker tag $IMAGE_ID:${{github.ref_name}} $IMAGE_ID:latest
           docker push $IMAGE_ID:${{github.ref_name}}
-          docker push $IMAGE_ID:latest
+          docker push $IMAGE_ID:latest  
 
   release_on_windows:
     runs-on: windows-latest
-    needs: release_on_linux
+    needs: create_release
     if: startsWith(github.ref, 'refs/tags/v')
+    concurrency: release
     steps:
       - uses: actions/checkout@v3
 
