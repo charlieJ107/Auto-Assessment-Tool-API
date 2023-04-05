@@ -15,6 +15,7 @@ func TestMultiChoiceQuestionController(t *testing.T) {
 	t.Run("CreateMultiChoiceQuestion", TestCreateMultiChoiceQuestion)
 	t.Run("GetMultiChoiceQuestions", TestGetMultiChoiceQuestions)
 	t.Run("GetMultiChoiceQuestion", TestGetMultiChoiceQuestion)
+	t.Run("UpdateMultiChoiceQuestion", TestUpdateMultiChoiceQuestion)
 	t.Run("DeleteMultiChoiceQuestion", TestDeleteMultiChoiceQuestion)
 }
 
@@ -307,6 +308,96 @@ func TestDeleteMultiChoiceQuestion(t *testing.T) {
 					status, tt.args.expectedStatus)
 			}
 
+		})
+	}
+}
+
+func TestUpdateMultiChoiceQuestion(t *testing.T) {
+	type args struct {
+		req            *http.Request
+		expectedStatus int
+		expectedBody   string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Update a multi choice question",
+			args: args{
+				req: httptest.NewRequest("PUT", "/multi-choice/1", strings.NewReader(`{
+					"title": "What is the capital of France?",
+					"description": "This is a sample question",
+					"credit": 10,
+					"answers": [
+						{
+							"content": "Paris",
+							"is_correct": true
+						},
+						{
+							"content": "London",
+							"is_correct": false
+						},
+						{
+							"content": "New York",
+							"is_correct": false
+						}
+					],
+					"tags": [
+						"France",
+						"Capital"
+					]
+				}`)),
+				expectedStatus: http.StatusOK,
+				expectedBody: `{
+					"id": 1,
+					"title": "What is the capital of France?",
+					"description": "This is a sample question",
+					"credit": 10,
+					"answers": [
+						{
+							"content": "Paris",
+							"is_correct": true
+						},
+						{
+							"content": "London",
+							"is_correct": false
+						},
+						{
+							"content": "New York",
+							"is_correct": false
+						}
+					],
+					"tags": [
+						"France",
+						"Capital"
+					]
+				}`},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Run test here
+			// Create a new HTTP response recorder
+			rr := httptest.NewRecorder()
+
+			// Create a new router instance
+			r := gin.Default()
+
+			// Define the route
+			r.PUT("/multi-choice/:id", UpdateMultiChoiceQuestion)
+
+			// Connect database
+			models.ConnectDatabase()
+
+			// Dispatch the HTTP request
+			r.ServeHTTP(rr, tt.args.req)
+
+			// Check the status code
+			if status := rr.Code; status != tt.args.expectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tt.args.expectedStatus)
+			}
 		})
 	}
 }

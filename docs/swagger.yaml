@@ -21,14 +21,9 @@ definitions:
         type: integer
       tags:
         items:
-          $ref: '#/definitions/models.TagDTO'
+          type: string
         type: array
       title:
-        type: string
-    type: object
-  models.TagDTO:
-    properties:
-      name:
         type: string
     type: object
 host: localhost:8080
@@ -89,6 +84,24 @@ paths:
       tags:
       - MultiChoiceQuestions
   /multi-choice/{id}:
+    delete:
+      description: Delete a multi choice question
+      parameters:
+      - description: ID of the question
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Question deleted
+          schema:
+            type: string
+      summary: Delete a multi choice question
+      tags:
+      - MultiChoiceQuestions
     get:
       description: Get a multi choice question
       parameters:
@@ -105,6 +118,36 @@ paths:
           schema:
             $ref: '#/definitions/models.MultiChoiceQuestionDTO'
       summary: Get a multi choice question
+      tags:
+      - MultiChoiceQuestions
+    put:
+      consumes:
+      - application/json
+      description: Update a multi choice question
+      parameters:
+      - description: ID of the question
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Question to update
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+      summary: Update a multi choice question
       tags:
       - MultiChoiceQuestions
 swagger: "2.0"

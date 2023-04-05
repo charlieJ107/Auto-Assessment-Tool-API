@@ -201,3 +201,90 @@ func DeleteMultiChoiceQuestion(c *gin.Context) {
 	models.DB.Where("question_id = ?", question.ID).Delete(&models.MultiChoiceAnswer{})
 	c.IndentedJSON(http.StatusNoContent, gin.H{"message": "Question deleted"})
 }
+
+// UpdateMultiChoiceQuestion
+// @Summary Update a multi choice question
+// @Description Update a multi choice question
+// @Tags MultiChoiceQuestions
+// @Accept json
+// @Produce json
+// @Param id path string true "ID of the question"
+// @Param question body models.MultiChoiceQuestionDTO true "Question to update"
+// @Success 200 {object} models.MultiChoiceQuestionDTO
+// @Failure 400 {object} string "Invalid request body"
+// @Router /multi-choice/{id} [put]
+func UpdateMultiChoiceQuestion(c *gin.Context) {
+	// Convert request body to DTO
+	var dto models.MultiChoiceQuestionDTO
+	err := c.BindJSON(&dto)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+	// Find question by ID
+	var question models.MultiChoiceQuestion
+	models.DB.First(&question, c.Param("id"))
+	// Update question
+	question.Title = dto.Title
+	question.Description = dto.Description
+	question.Credit = dto.Credit
+	models.DB.Save(&question)
+	// Delete all answers
+	models.DB.Where("question_id = ?", question.ID).Delete(&models.MultiChoiceAnswer{})
+	// Create new answers
+	for _, answerDTO := range dto.Answers {
+		var answer models.MultiChoiceAnswer
+		answer.Content = answerDTO.Content
+		answer.IsCorrect = answerDTO.IsCorrect
+		answer.QuestionID = question.ID
+		models.DB.Create(&answer)
+		// append answer to question
+		err := models.DB.Model(&question).Association("Answers").Append(&answer)
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Error when append answer to question"})
+			return
+		}
+	}
+	// Delete all tags
+	err = models.DB.Model(&question).Association("Tags").Clear()
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Error when delete tags from question"})
+		return
+	}
+	// Create new tags
+	for _, tagName := range dto.Tags {
+		// check if tag exists, if not create it
+		var tag models.Tag
+		models.DB.Where("name = ?", tagName).First(&tag)
+		if tag.ID == 0 {
+			tag.Name = tagName
+			models.DB.Create(&tag)
+		}
+		// append tag to question
+		err := models.DB.Model(&question).Association("Tags").Append(&tag)
+		if err != nil {
+			c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Error when append tag to question"})
+			return
+		}
+	}
+	// convert question with its tags and answers to dto
+	// the tags and answers are already loaded into question object,
+	// so we can just convert it to dto
+	var responseDTO models.MultiChoiceQuestionDTO
+	responseDTO.ID = question.ID
+	responseDTO.Title = question.Title
+	responseDTO.Description = question.Description
+	responseDTO.Credit = question.Credit
+	// convert question.tags to DTOs and append to responseDTO
+	for _, tag := range question.Tags {
+		responseDTO.Tags = append(responseDTO.Tags, tag.Name)
+	}
+	// convert question.answers to DTOs and append to responseDTO
+	for _, answer := range question.Answers {
+		var answerDTO models.MultiChoiceAnswerDTO
+		answerDTO.Content = answer.Content
+		answerDTO.IsCorrect = answer.IsCorrect
+		responseDTO.Answers = append(responseDTO.Answers, answerDTO)
+	}
+	c.IndentedJSON(http.StatusOK, responseDTO)
+}
