@@ -224,6 +224,10 @@ func UpdateMultiChoiceQuestion(c *gin.Context) {
 	// Find question by ID
 	var question models.MultiChoiceQuestion
 	models.DB.First(&question, c.Param("id"))
+	if question.ID == 0 {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"error": "Question not found"})
+		return
+	}
 	// Update question
 	question.Title = dto.Title
 	question.Description = dto.Description
