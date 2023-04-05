@@ -119,6 +119,78 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Update a multi choice question",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MultiChoiceQuestions"
+                ],
+                "summary": "Update a multi choice question",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the question",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Question to update",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.MultiChoiceQuestionDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.MultiChoiceQuestionDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a multi choice question",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MultiChoiceQuestions"
+                ],
+                "summary": "Delete a multi choice question",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the question",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Question deleted",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         }
     },
@@ -155,18 +227,10 @@ const docTemplate = `{
                 "tags": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.TagDTO"
+                        "type": "string"
                     }
                 },
                 "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.TagDTO": {
-            "type": "object",
-            "properties": {
-                "name": {
                     "type": "string"
                 }
             }
