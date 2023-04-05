@@ -5,7 +5,7 @@ COPY . .
 ENV CGO_ENABLED=0
 RUN go build -o main .
 
-FROM alpine:3.14.2
+FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
 ENV GIN_MODE=release
