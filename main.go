@@ -39,7 +39,7 @@ func main() {
 	if !ok {
 		port = "8080"
 	}
-	err := router.Run(":%s", port)
+	err := router.Run(fmt.Sprintf(":%s", port))
 	if err != nil {
 		return
 	}
