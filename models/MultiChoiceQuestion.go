@@ -8,7 +8,7 @@ type MultiChoiceQuestion struct {
 	Description string
 	Credit      int
 	Answers     []MultiChoiceAnswer `gorm:"foreignKey:QuestionID"`
-	Tags        []Tag               `gorm:"many2many:question_tags;"`
+	Tags        []Tag               `gorm:"many2many:multi_choice_question_tags;"`
 }
 
 type MultiChoiceAnswer struct {

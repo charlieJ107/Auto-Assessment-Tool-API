@@ -12,14 +12,14 @@ import (
 )
 
 func TestMultiChoiceQuestionController(t *testing.T) {
-	t.Run("CreateMultiChoiceQuestion", TestCreateMultiChoiceQuestion)
-	t.Run("GetMultiChoiceQuestions", TestGetMultiChoiceQuestions)
-	t.Run("GetMultiChoiceQuestion", TestGetMultiChoiceQuestion)
-	t.Run("UpdateMultiChoiceQuestion", TestUpdateMultiChoiceQuestion)
-	t.Run("DeleteMultiChoiceQuestion", TestDeleteMultiChoiceQuestion)
+	t.Run("CreateMultiChoiceQuestion", testCreateMultiChoiceQuestion)
+	t.Run("GetMultiChoiceQuestions", testGetMultiChoiceQuestions)
+	t.Run("UpdateMultiChoiceQuestion", testUpdateMultiChoiceQuestion)
+	t.Run("GetMultiChoiceQuestion", testGetMultiChoiceQuestion)
+	t.Run("DeleteMultiChoiceQuestion", testDeleteMultiChoiceQuestion)
 }
 
-func TestCreateMultiChoiceQuestion(t *testing.T) {
+func testCreateMultiChoiceQuestion(t *testing.T) {
 	type args struct {
 		req            *http.Request
 		expectedStatus int
@@ -117,7 +117,7 @@ func TestCreateMultiChoiceQuestion(t *testing.T) {
 	}
 }
 
-func TestGetMultiChoiceQuestions(t *testing.T) {
+func testGetMultiChoiceQuestions(t *testing.T) {
 	type args struct {
 		req            *http.Request
 		expectedStatus int
@@ -193,7 +193,7 @@ func TestGetMultiChoiceQuestions(t *testing.T) {
 	}
 }
 
-func TestGetMultiChoiceQuestion(t *testing.T) {
+func testGetMultiChoiceQuestion(t *testing.T) {
 	type args struct {
 		req            *http.Request
 		expectedStatus int
@@ -212,7 +212,7 @@ func TestGetMultiChoiceQuestion(t *testing.T) {
 					"id": 1,
 					"title": "What is the capital of France?",
 					"description": "This is a sample question",
-					"credit": 10,
+					"credit": 15,
 					"answers": [
 						{
 							"content": "Paris",
@@ -267,52 +267,7 @@ func TestGetMultiChoiceQuestion(t *testing.T) {
 	}
 }
 
-func TestDeleteMultiChoiceQuestion(t *testing.T) {
-	type args struct {
-		req            *http.Request
-		expectedStatus int
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		{
-			name: "Delete a multi choice question",
-			args: args{
-				req:            httptest.NewRequest("DELETE", "/multi-choice/1", nil),
-				expectedStatus: http.StatusNoContent,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			// Run test here
-			// Create a new HTTP response recorder
-			rr := httptest.NewRecorder()
-
-			// Create a new router instance
-			r := gin.Default()
-
-			// Define the route
-			r.DELETE("/multi-choice/:id", DeleteMultiChoiceQuestion)
-
-			// Connect database
-			models.ConnectDatabase()
-
-			// Dispatch the HTTP request
-			r.ServeHTTP(rr, tt.args.req)
-
-			// Check the status code: No content (204) so no body to check
-			if status := rr.Code; status != tt.args.expectedStatus {
-				t.Errorf("handler returned wrong status code: got %v want %v",
-					status, tt.args.expectedStatus)
-			}
-
-		})
-	}
-}
-
-func TestUpdateMultiChoiceQuestion(t *testing.T) {
+func testUpdateMultiChoiceQuestion(t *testing.T) {
 	type args struct {
 		req            *http.Request
 		expectedStatus int
@@ -328,7 +283,7 @@ func TestUpdateMultiChoiceQuestion(t *testing.T) {
 				req: httptest.NewRequest("PUT", "/multi-choice/1", strings.NewReader(`{
 					"title": "What is the capital of France?",
 					"description": "This is a sample question",
-					"credit": 10,
+					"credit": 15,
 					"answers": [
 						{
 							"content": "Paris",
@@ -353,7 +308,7 @@ func TestUpdateMultiChoiceQuestion(t *testing.T) {
 					"id": 1,
 					"title": "What is the capital of France?",
 					"description": "This is a sample question",
-					"credit": 10,
+					"credit": 15,
 					"answers": [
 						{
 							"content": "Paris",
@@ -398,6 +353,51 @@ func TestUpdateMultiChoiceQuestion(t *testing.T) {
 				t.Errorf("handler returned wrong status code: got %v want %v",
 					status, tt.args.expectedStatus)
 			}
+		})
+	}
+}
+
+func testDeleteMultiChoiceQuestion(t *testing.T) {
+	type args struct {
+		req            *http.Request
+		expectedStatus int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Delete a multi choice question",
+			args: args{
+				req:            httptest.NewRequest("DELETE", "/multi-choice/1", nil),
+				expectedStatus: http.StatusNoContent,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Run test here
+			// Create a new HTTP response recorder
+			rr := httptest.NewRecorder()
+
+			// Create a new router instance
+			r := gin.Default()
+
+			// Define the route
+			r.DELETE("/multi-choice/:id", DeleteMultiChoiceQuestion)
+
+			// Connect database
+			models.ConnectDatabase()
+
+			// Dispatch the HTTP request
+			r.ServeHTTP(rr, tt.args.req)
+
+			// Check the status code: No content (204) so no body to check
+			if status := rr.Code; status != tt.args.expectedStatus {
+				t.Errorf("handler returned wrong status code: got %v want %v",
+					status, tt.args.expectedStatus)
+			}
+
 		})
 	}
 }

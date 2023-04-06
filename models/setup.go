@@ -22,7 +22,11 @@ func ConnectDatabase() {
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
-	err = database.AutoMigrate(&MultiChoiceQuestion{}, &MultiChoiceAnswer{}, &Tag{})
+	err = database.AutoMigrate(
+		&MultiChoiceQuestion{},
+		&MultiChoiceAnswer{},
+		&ShortAnswerQuestion{},
+		&Tag{})
 	if err != nil {
 		return
 	}
