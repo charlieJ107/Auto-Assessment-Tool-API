@@ -154,11 +154,10 @@ func UpdateShortAnswerQuestion(c *gin.Context) {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"error": "Error when binding json"})
 		return
 	}
-	// Get question
+	// Find question by ID
 	var question models.ShortAnswerQuestion
-	id := c.Param("id")
-	err = models.DB.Where("id = ?", id).First(&question).Error
-	if err != nil {
+	models.DB.First(&question, c.Param("id"))
+	if question.ID == 0 {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": "Question not found"})
 		return
 	}
@@ -196,6 +195,8 @@ func UpdateShortAnswerQuestion(c *gin.Context) {
 			return
 		}
 	}
+	// convert question to DTO
+	dto.ID = question.ID
 	// Return DTO as json
 	c.IndentedJSON(http.StatusOK, dto)
 }
