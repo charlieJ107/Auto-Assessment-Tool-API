@@ -36,6 +36,11 @@ func main() {
 	v1.POST("/multi-choice", controllers.CreateMultiChoiceQuestion)
 	v1.DELETE("/multi-choice/:id", controllers.DeleteMultiChoiceQuestion)
 	v1.PUT("/multi-choice/:id", controllers.UpdateMultiChoiceQuestion)
+	v1.GET("/short-answer", controllers.GetShortAnswerQuestions)
+	v1.GET("/short-answer/:id", controllers.GetShortAnswerQuestion)
+	v1.POST("/short-answer", controllers.CreateShortAnswerQuestion)
+	v1.DELETE("/short-answer/:id", controllers.DeleteShortAnswerQuestion)
+	v1.PUT("/short-answer/:id", controllers.UpdateShortAnswerQuestion)
 
 	port, ok := os.LookupEnv("AAT_PORT")
 	if !ok {

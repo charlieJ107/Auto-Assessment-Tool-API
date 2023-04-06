@@ -26,6 +26,23 @@ definitions:
       title:
         type: string
     type: object
+  models.ShortAnswerQuestionDTO:
+    properties:
+      correct_answer:
+        type: string
+      credit:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -150,4 +167,104 @@ paths:
       summary: Update a multi choice question
       tags:
       - MultiChoiceQuestions
+  /short-answer:
+    get:
+      description: Get all short answer questions
+      parameters:
+      - description: Tags to filter questions
+        in: query
+        name: tags
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+            type: array
+      summary: Get all short answer questions
+      tags:
+      - ShortAnswerQuestions
+    post:
+      description: Create a short answer question
+      parameters:
+      - description: Question to create
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+      summary: Create a short answer question
+      tags:
+      - ShortAnswerQuestions
+  /short-answer/{id}:
+    delete:
+      description: Delete a short answer question
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+      summary: Delete a short answer question
+      tags:
+      - ShortAnswerQuestions
+    get:
+      description: Get a short answer question
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+      summary: Get a short answer question
+      tags:
+      - ShortAnswerQuestions
+    put:
+      description: Update a short answer question
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Question to update
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+      summary: Update a short answer question
+      tags:
+      - ShortAnswerQuestions
 swagger: "2.0"

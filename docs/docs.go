@@ -192,6 +192,158 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/short-answer": {
+            "get": {
+                "description": "Get all short answer questions",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ShortAnswerQuestions"
+                ],
+                "summary": "Get all short answer questions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tags to filter questions",
+                        "name": "tags",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a short answer question",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ShortAnswerQuestions"
+                ],
+                "summary": "Create a short answer question",
+                "parameters": [
+                    {
+                        "description": "Question to create",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/short-answer/{id}": {
+            "get": {
+                "description": "Get a short answer question",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ShortAnswerQuestions"
+                ],
+                "summary": "Get a short answer question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a short answer question",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ShortAnswerQuestions"
+                ],
+                "summary": "Update a short answer question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Question to update",
+                        "name": "question",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a short answer question",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ShortAnswerQuestions"
+                ],
+                "summary": "Delete a short answer question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -214,6 +366,32 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/models.MultiChoiceAnswerDTO"
                     }
+                },
+                "credit": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ShortAnswerQuestionDTO": {
+            "type": "object",
+            "properties": {
+                "correct_answer": {
+                    "type": "string"
                 },
                 "credit": {
                     "type": "integer"
