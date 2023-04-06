@@ -132,6 +132,8 @@ func CreateShortAnswerQuestion(c *gin.Context) {
 			return
 		}
 	}
+	// Convert question to DTO
+	dto.ID = question.ID
 	// Return DTO as json
 	c.IndentedJSON(http.StatusCreated, dto)
 }
