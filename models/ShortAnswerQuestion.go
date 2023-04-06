@@ -12,10 +12,10 @@ type ShortAnswerQuestion struct {
 }
 
 type ShortAnswerQuestionDTO struct {
-	ID            uint   `json:"id"`
-	Title         string `json:"title"`
-	Description   string `json:"description"`
-	Credit        int    `json:"credit"`
-	CorrectAnswer string `json:"correct_answer"`
-	Tags          []string
+	ID            uint     `json:"id"`
+	Title         string   `json:"title"`
+	Description   string   `json:"description"`
+	Credit        int      `json:"credit"`
+	CorrectAnswer string   `json:"correct_answer"`
+	Tags          []string `json:"tags"`
 }
