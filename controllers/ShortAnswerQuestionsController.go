@@ -225,5 +225,5 @@ func DeleteShortAnswerQuestion(c *gin.Context) {
 		return
 	}
 	// Return DTO as json
-	c.IndentedJSON(http.StatusOK, gin.H{"message": "Question deleted successfully"})
+	c.IndentedJSON(http.StatusNoContent, gin.H{"message": "Question deleted successfully"})
 }

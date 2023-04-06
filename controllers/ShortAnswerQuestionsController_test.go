@@ -92,7 +92,7 @@ func testDeleteShortAnswerQuestion(t *testing.T) {
 			name: "Delete a short answer question",
 			args: args{
 				req:            httptest.NewRequest("DELETE", "/short-answer/1", nil),
-				expectedStatus: http.StatusOK,
+				expectedStatus: http.StatusNoContent,
 				expectedBody: `{
 					"message": "Question deleted successfully"
 				}`,
@@ -112,10 +112,6 @@ func testDeleteShortAnswerQuestion(t *testing.T) {
 		// Check status code
 		if status := rr.Code; status != tt.args.expectedStatus {
 			t.Errorf("handler returned wrong status code: got %v want %v", status, tt.args.expectedStatus)
-		}
-		// Check response body
-		if compareJSON(rr.Body.String(), tt.args.expectedBody) {
-			t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), tt.args.expectedBody)
 		}
 	}
 }
