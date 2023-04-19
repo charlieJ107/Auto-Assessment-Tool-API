@@ -35,6 +35,7 @@ func GetFormativeAssessments(c *gin.Context) {
 		dto.Difficulty = assessment.Difficulty
 		dto.Points = assessment.Points
 		dto.Topic = assessment.Topic
+		dto.Randomisation = assessment.Randomisation
 		// Get MultiChoiceQuestions
 		var multiChoiceQuestions []models.MultiChoiceQuestion
 		models.DB.Where("formative_assessment_id = ?", assessment.ID).Find(&multiChoiceQuestions)
@@ -126,6 +127,7 @@ func GetFormativeAssessment(c *gin.Context) {
 	dto.Difficulty = assessment.Difficulty
 	dto.Points = assessment.Points
 	dto.Topic = assessment.Topic
+	dto.Randomisation = assessment.Randomisation
 	// Get MultiChoiceQuestions
 	var multiChoiceQuestions []models.MultiChoiceQuestion
 	models.DB.Where("formative_assessment_id = ?", assessment.ID).Find(&multiChoiceQuestions)
@@ -211,6 +213,7 @@ func CreateFormativeAssessment(c *gin.Context) {
 	assessment.Difficulty = dto.Difficulty
 	assessment.Points = dto.Points
 	assessment.Topic = dto.Topic
+	assessment.Randomisation = dto.Randomisation
 
 	// Create formative assessment
 	models.DB.Create(&assessment)
@@ -258,6 +261,7 @@ func CreateFormativeAssessment(c *gin.Context) {
 	responseDTO.Difficulty = assessment.Difficulty
 	responseDTO.Points = assessment.Points
 	responseDTO.Topic = assessment.Topic
+	responseDTO.Randomisation = assessment.Randomisation
 
 	// Get MultiChoiceQuestions with ids from assessmentDTO multiChoiceQuestionIds
 	var multiChoiceQuestions []models.MultiChoiceQuestion
@@ -361,6 +365,7 @@ func UpdateFormativeAssessment(c *gin.Context) {
 	assessment.Difficulty = dto.Difficulty
 	assessment.Points = dto.Points
 	assessment.Topic = dto.Topic
+	assessment.Randomisation = dto.Randomisation
 	// Update assessment
 	models.DB.Save(&assessment)
 	// Delete tags
@@ -423,6 +428,7 @@ func UpdateFormativeAssessment(c *gin.Context) {
 	responseDTO.Difficulty = assessment.Difficulty
 	responseDTO.Points = assessment.Points
 	responseDTO.Topic = assessment.Topic
+	responseDTO.Randomisation = assessment.Randomisation
 	// Get MultiChoiceQuestions with ids from assessmentDTO multiChoiceQuestionIds
 	var multiChoiceQuestions []models.MultiChoiceQuestion
 	for _, multiChoiceQuestionId := range dto.MultiChoiceQuestionIds {
