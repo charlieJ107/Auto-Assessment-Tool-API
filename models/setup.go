@@ -26,6 +26,7 @@ func ConnectDatabase() {
 		&MultiChoiceQuestion{},
 		&MultiChoiceAnswer{},
 		&ShortAnswerQuestion{},
+		&FormativeAssessment{},
 		&Tag{})
 	if err != nil {
 		return
