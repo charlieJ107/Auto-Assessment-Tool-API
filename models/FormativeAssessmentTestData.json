@@ -1,0 +1,26 @@
+{
+  "create": [
+    {
+      "id": null,
+      "title": "Test Assessment",
+      "difficulty": "easy",
+      "points": 100,
+      "topic": "Test Topic",
+      "multi_choice_question_ids": [
+        1,
+        2,
+        3
+      ],
+      "short_answer_question_ids": [
+        4,
+        5,
+        6
+      ],
+      "randomisation": true,
+      "tags": [
+        "test",
+        "assessment"
+      ]
+    }
+  ]
+}
