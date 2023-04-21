@@ -36,6 +36,8 @@ func GetMultiChoiceQuestions(c *gin.Context) {
 		dto.Title = question.Title
 		dto.Description = question.Description
 		dto.Credit = question.Credit
+		dto.Feedback = question.Feedback
+		dto.Difficulty = question.Difficulty
 		// Get answers
 		var answers []models.MultiChoiceAnswer
 		models.DB.Where("question_id = ?", question.ID).Find(&answers)
@@ -92,6 +94,8 @@ func GetMultiChoiceQuestion(c *gin.Context) {
 	dto.Title = question.Title
 	dto.Description = question.Description
 	dto.Credit = question.Credit
+	dto.Feedback = question.Feedback
+	dto.Difficulty = question.Difficulty
 
 	for _, answer := range answers {
 		var answerDTO models.MultiChoiceAnswerDTO
@@ -130,6 +134,8 @@ func CreateMultiChoiceQuestion(c *gin.Context) {
 	question.Title = dto.Title
 	question.Description = dto.Description
 	question.Credit = dto.Credit
+	question.Feedback = dto.Feedback
+	question.Difficulty = dto.Difficulty
 
 	models.DB.Create(&question)
 
@@ -171,6 +177,8 @@ func CreateMultiChoiceQuestion(c *gin.Context) {
 	responseDTO.Title = question.Title
 	responseDTO.Description = question.Description
 	responseDTO.Credit = question.Credit
+	responseDTO.Feedback = question.Feedback
+	responseDTO.Difficulty = question.Difficulty
 	// convert question.tags to DTOs and append to responseDTO
 	for _, tag := range question.Tags {
 		responseDTO.Tags = append(responseDTO.Tags, tag.Name)
@@ -232,6 +240,8 @@ func UpdateMultiChoiceQuestion(c *gin.Context) {
 	question.Title = dto.Title
 	question.Description = dto.Description
 	question.Credit = dto.Credit
+	question.Feedback = dto.Feedback
+	question.Difficulty = dto.Difficulty
 	models.DB.Save(&question)
 	// Delete all answers
 	models.DB.Where("question_id = ?", question.ID).Delete(&models.MultiChoiceAnswer{})
@@ -279,6 +289,8 @@ func UpdateMultiChoiceQuestion(c *gin.Context) {
 	responseDTO.Title = question.Title
 	responseDTO.Description = question.Description
 	responseDTO.Credit = question.Credit
+	responseDTO.Feedback = question.Feedback
+	responseDTO.Difficulty = question.Difficulty
 	// convert question.tags to DTOs and append to responseDTO
 	for _, tag := range question.Tags {
 		responseDTO.Tags = append(responseDTO.Tags, tag.Name)
