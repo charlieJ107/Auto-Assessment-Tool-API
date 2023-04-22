@@ -92,6 +92,7 @@ func GetFormativeAssessments(c *gin.Context) {
 			for _, tag := range tags {
 				shortAnswerQuestionDto.Tags = append(shortAnswerQuestionDto.Tags, tag.Name)
 			}
+			dto.ShortAnswerQuestions = append(dto.ShortAnswerQuestions, shortAnswerQuestionDto)
 		}
 
 		// Get tags
@@ -182,6 +183,7 @@ func GetFormativeAssessment(c *gin.Context) {
 		for _, tag := range tags {
 			shortAnswerQuestionDto.Tags = append(shortAnswerQuestionDto.Tags, tag.Name)
 		}
+		dto.ShortAnswerQuestions = append(dto.ShortAnswerQuestions, shortAnswerQuestionDto)
 	}
 	// Get tags
 	var tags []models.Tag
