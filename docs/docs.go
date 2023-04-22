@@ -640,8 +640,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is the backend RESTful API for the Auto Assessment Tool.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {
