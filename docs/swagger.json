@@ -16,6 +16,173 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
+        "/formative-assessments": {
+            "get": {
+                "description": "Get all formative assessments",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FormativeAssessments"
+                ],
+                "summary": "Get all formative assessments",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Tags to filter assessments",
+                        "name": "tags",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a formative assessment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FormativeAssessments"
+                ],
+                "summary": "Create a formative assessment",
+                "parameters": [
+                    {
+                        "description": "Formative assessment",
+                        "name": "formativeAssessment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/formative-assessments/{id}": {
+            "get": {
+                "description": "Get a formative assessment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FormativeAssessments"
+                ],
+                "summary": "Get a formative assessment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Formative assessment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a formative assessment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FormativeAssessments"
+                ],
+                "summary": "Update a formative assessment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Formative assessment ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Formative assessment",
+                        "name": "formativeAssessment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete formative assessment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "FormativeAssessment"
+                ],
+                "summary": "Delete formative assessment",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Formative assessment id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.FormativeAssessmentResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/multi-choice": {
             "get": {
                 "description": "Get all multi choice questions",
@@ -340,6 +507,47 @@
         }
     },
     "definitions": {
+        "models.FormativeAssessmentResponseDTO": {
+            "type": "object",
+            "properties": {
+                "difficulty": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "multi_choice_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.MultiChoiceQuestionDTO"
+                    }
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "randomisation": {
+                    "type": "boolean"
+                },
+                "short_answer_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ShortAnswerQuestionDTO"
+                    }
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "topic": {
+                    "type": "string"
+                }
+            }
+        },
         "models.MultiChoiceAnswerDTO": {
             "type": "object",
             "properties": {

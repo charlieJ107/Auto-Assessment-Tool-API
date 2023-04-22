@@ -1,5 +1,32 @@
 basePath: /api/v1
 definitions:
+  models.FormativeAssessmentResponseDTO:
+    properties:
+      difficulty:
+        type: string
+      id:
+        type: integer
+      multi_choice_questions:
+        items:
+          $ref: '#/definitions/models.MultiChoiceQuestionDTO'
+        type: array
+      points:
+        type: integer
+      randomisation:
+        type: boolean
+      short_answer_questions:
+        items:
+          $ref: '#/definitions/models.ShortAnswerQuestionDTO'
+        type: array
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      topic:
+        type: string
+    type: object
   models.MultiChoiceAnswerDTO:
     properties:
       content:
@@ -55,6 +82,116 @@ info:
   title: Auto Assessment Tool backend RESTful API
   version: "1.0"
 paths:
+  /formative-assessments:
+    get:
+      description: Get all formative assessments
+      parameters:
+      - description: Tags to filter assessments
+        in: query
+        name: tags
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+            type: array
+      summary: Get all formative assessments
+      tags:
+      - FormativeAssessments
+    post:
+      description: Create a formative assessment
+      parameters:
+      - description: Formative assessment
+        in: body
+        name: formativeAssessment
+        required: true
+        schema:
+          $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+      summary: Create a formative assessment
+      tags:
+      - FormativeAssessments
+  /formative-assessments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete formative assessment
+      parameters:
+      - description: Formative assessment id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Delete formative assessment
+      tags:
+      - FormativeAssessment
+    get:
+      description: Get a formative assessment
+      parameters:
+      - description: Formative assessment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+      summary: Get a formative assessment
+      tags:
+      - FormativeAssessments
+    put:
+      description: Update a formative assessment
+      parameters:
+      - description: Formative assessment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Formative assessment
+        in: body
+        name: formativeAssessment
+        required: true
+        schema:
+          $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FormativeAssessmentResponseDTO'
+      summary: Update a formative assessment
+      tags:
+      - FormativeAssessments
   /multi-choice:
     get:
       description: Get all multi choice questions
