@@ -38,6 +38,8 @@ func testCreateMultiChoiceQuestion(t *testing.T) {
 						  "title": "What is the capital of France?",
 						  "description": "This is a sample question",
 						  "credit": 10,
+							"feedback":"This is some feedback",
+"difficulty":"easy",
 						  "answers": [
 							{
 							  "content": "Paris",
@@ -63,6 +65,8 @@ func testCreateMultiChoiceQuestion(t *testing.T) {
 				"title": "What is the capital of France?",
 				"description": "This is a sample question",
 				"credit": 10,
+							"feedback":"This is some feedback",
+"difficulty":"easy",
 				"answers": [
 					{
 						"content": "Paris",
@@ -138,6 +142,8 @@ func testGetMultiChoiceQuestions(t *testing.T) {
 						"title": "What is the capital of France?",
 						"description": "This is a sample question",
 						"credit": 10,
+							"feedback":"This is some feedback",
+"difficulty":"easy",
 						"answers": [
 							{
 								"content": "Paris",
@@ -213,6 +219,8 @@ func testGetMultiChoiceQuestion(t *testing.T) {
 					"title": "What is the capital of France?",
 					"description": "This is a sample question",
 					"credit": 15,
+							"feedback":"This is some feedback",
+"difficulty":"easy",
 					"answers": [
 						{
 							"content": "Paris",
@@ -284,6 +292,8 @@ func testUpdateMultiChoiceQuestion(t *testing.T) {
 					"title": "What is the capital of France?",
 					"description": "This is a sample question",
 					"credit": 15,
+							"feedback":"This is some feedback",
+"difficulty":"easy",
 					"answers": [
 						{
 							"content": "Paris",
