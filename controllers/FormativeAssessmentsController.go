@@ -22,9 +22,18 @@ func GetFormativeAssessments(c *gin.Context) {
 	tags := c.QueryArray("tags")
 	// Get all assessments with multiple optional tags
 	if len(tags) > 0 {
-		models.DB.Where("tags.name IN ?", tags).Joins("JOIN assessment_tags ON assessment_tags.assessment_id = formative_assessments.id").Joins("JOIN tags ON tags.id = assessment_tags.tag_id").Find(&assessments)
+		models.DB.
+			Model(&models.FormativeAssessment{}).
+			Preload("MultiChoiceQuestions").Preload("ShortAnswerQuestions").
+			Where("tags.name IN ?", tags).
+			Joins("JOIN assessment_tags ON assessment_tags.assessment_id = formative_assessments.id").
+			Joins("JOIN tags ON tags.id = assessment_tags.tag_id").
+			Find(&assessments)
 	} else {
-		models.DB.Find(&assessments)
+		models.DB.
+			Model(&models.FormativeAssessment{}).
+			Preload("MultiChoiceQuestions").Preload("ShortAnswerQuestions").
+			Find(&assessments)
 	}
 	// Convert assessments to DTO
 	var dtos []models.FormativeAssessmentResponseDTO
@@ -37,9 +46,7 @@ func GetFormativeAssessments(c *gin.Context) {
 		dto.Topic = assessment.Topic
 		dto.Randomisation = assessment.Randomisation
 		// Get MultiChoiceQuestions
-		var multiChoiceQuestions []models.MultiChoiceQuestion
-		models.DB.Where("formative_assessment_id = ?", assessment.ID).Find(&multiChoiceQuestions)
-		for _, multiChoiceQuestion := range multiChoiceQuestions {
+		for _, multiChoiceQuestion := range assessment.MultiChoiceQuestions {
 			var multiChoiceQuestionDto models.MultiChoiceQuestionDTO
 			multiChoiceQuestionDto.ID = multiChoiceQuestion.ID
 			multiChoiceQuestionDto.Title = multiChoiceQuestion.Title
@@ -68,9 +75,7 @@ func GetFormativeAssessments(c *gin.Context) {
 		}
 
 		// Get ShortAnswerQuestions
-		var shortAnswerQuestions []models.ShortAnswerQuestion
-		models.DB.Where("formative_assessment_id = ?", assessment.ID).Find(&shortAnswerQuestions)
-		for _, shortAnswerQuestion := range shortAnswerQuestions {
+		for _, shortAnswerQuestion := range assessment.ShortAnswerQuestions {
 			var shortAnswerQuestionDto models.ShortAnswerQuestionDTO
 			shortAnswerQuestionDto.ID = shortAnswerQuestion.ID
 			shortAnswerQuestionDto.Title = shortAnswerQuestion.Title
@@ -115,7 +120,9 @@ func GetFormativeAssessments(c *gin.Context) {
 func GetFormativeAssessment(c *gin.Context) {
 	var assessment models.FormativeAssessment
 	id := c.Param("id")
-	err := models.DB.Where("id = ?", id).First(&assessment).Error
+	err := models.DB.Model(&models.FormativeAssessment{}).
+		Preload("MultiChoiceQuestions").Preload("ShortAnswerQuestions").
+		Where("id = ?", id).First(&assessment).Error
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, gin.H{"error": "Formative assessment not found"})
 		return
@@ -129,9 +136,7 @@ func GetFormativeAssessment(c *gin.Context) {
 	dto.Topic = assessment.Topic
 	dto.Randomisation = assessment.Randomisation
 	// Get MultiChoiceQuestions
-	var multiChoiceQuestions []models.MultiChoiceQuestion
-	models.DB.Where("formative_assessment_id = ?", assessment.ID).Find(&multiChoiceQuestions)
-	for _, multiChoiceQuestion := range multiChoiceQuestions {
+	for _, multiChoiceQuestion := range assessment.MultiChoiceQuestions {
 		var multiChoiceQuestionDto models.MultiChoiceQuestionDTO
 		multiChoiceQuestionDto.ID = multiChoiceQuestion.ID
 		multiChoiceQuestionDto.Title = multiChoiceQuestion.Title
@@ -160,9 +165,7 @@ func GetFormativeAssessment(c *gin.Context) {
 	}
 
 	// Get ShortAnswerQuestions
-	var shortAnswerQuestions []models.ShortAnswerQuestion
-	models.DB.Where("formative_assessment_id = ?", assessment.ID).Find(&shortAnswerQuestions)
-	for _, shortAnswerQuestion := range shortAnswerQuestions {
+	for _, shortAnswerQuestion := range assessment.ShortAnswerQuestions {
 		var shortAnswerQuestionDto models.ShortAnswerQuestionDTO
 		shortAnswerQuestionDto.ID = shortAnswerQuestion.ID
 		shortAnswerQuestionDto.Title = shortAnswerQuestion.Title
