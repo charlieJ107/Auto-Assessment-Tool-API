@@ -46,6 +46,11 @@ func main() {
 	v1.POST("/formative-assessment", controllers.CreateFormativeAssessment)
 	v1.DELETE("/formative-assessment/:id", controllers.DeleteFormativeAssessment)
 	v1.PUT("/formative-assessment/:id", controllers.UpdateFormativeAssessment)
+	v1.GET("/summative-assessment", controllers.GetSummativeAssessments)
+	v1.GET("/summative-assessment/:id", controllers.GetSummativeAssessment)
+	v1.POST("/summative-assessment", controllers.CreateSummativeAssessment)
+	v1.DELETE("/summative-assessment/:id", controllers.DeleteSummativeAssessment)
+	v1.PUT("/summative-assessment/:id", controllers.UpdateSummativeAssessment)
 
 	port, ok := os.LookupEnv("AAT_PORT")
 	if !ok {
